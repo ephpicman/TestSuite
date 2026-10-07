@@ -23,7 +23,7 @@ final class Bridge
     /** Registers the EphpicMan gateway command with WP-CLI. */
     public function register(): void
     {
-        if (!class_exists('WP_CLI')) {
+        if (! class_exists('WP_CLI')) {
             return;
         }
 
@@ -61,7 +61,7 @@ final class Bridge
     {
         $argv = $GLOBALS['argv'] ?? null;
 
-        if (!is_array($argv)) {
+        if (! is_array($argv)) {
             throw new RuntimeException(
                 'Unable to access the WP-CLI process arguments.'
             );
