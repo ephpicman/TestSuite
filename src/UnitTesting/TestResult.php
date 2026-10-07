@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace EphpicMan\TestSuite\UnitTesting;
 
+/**
+ * @psalm-api
+ */
 final class TestResult
 {
     public function __construct(
