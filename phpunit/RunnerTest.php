@@ -25,7 +25,7 @@ final class RunnerTest extends TestCase
             $results = (new Runner($directory))->run();
 
             $this->assertCount(1, $results);
-            $this->assertTrue($results[0]->passed());
+            $this->assertTrue(\n                $results[0]->passed(),\n                sprintf(\n                    'failure=%s error=%s',\n                    $results[0]->failure()?->message() ?? '<none>',\n                    var_export($results[0]->error(), true),\n                ),\n            );
             $this->assertSame('testWorks', $results[0]->method());
         } finally {
             $this->removeFixtureDirectory($directory);
