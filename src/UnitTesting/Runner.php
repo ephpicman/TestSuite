@@ -30,6 +30,7 @@ final class Runner
 
         foreach ($this->findTestClasses($declaredClasses) as $class) {
             try {
+                /** @psalm-suppress UnsafeInstantiation */
                 $test = new $class();
 
                 foreach ($test->runTests() as $result) {
@@ -53,9 +54,14 @@ final class Runner
     private function loadTests(): void
     {
         foreach ($this->testsDirectories as $directory) {
-            $files = glob(rtrim($directory, DIRECTORY_SEPARATOR) . '/*Test.php') ?: [];
+            $files = glob(rtrim($directory, DIRECTORY_SEPARATOR) . '/*Test.php');
+
+            if ($files === false) {
+                continue;
+            }
 
             foreach ($files as $file) {
+                /** @psalm-suppress UnresolvableInclude */
                 require_once $file;
             }
         }
