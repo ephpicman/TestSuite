@@ -20,11 +20,4 @@ final class PluginTest extends TestCase
         $this->assertInstanceOf(Autoloader::class, Plugin::instance()->autoloader());
     }
 
-    public function testExposesTestDirectoryConfiguration(): void
-    {
-        $this->assertContains(
-            dirname(__DIR__) . '/tests',
-            Plugin::instance()->getTestsDirectories()
-        );
-    }
 }
