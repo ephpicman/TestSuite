@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace EphpicMan\TestSuite;
 
+use EphpicMan\TestSuite\Command\CommandRegistry;
+use EphpicMan\TestSuite\Command\WPCLI\Bridge;
+use EphpicMan\TestSuite\Commands\TestCommand;
 use EphpicMan\TestSuite\UnitTesting\Runner;
 use EphpicMan\TestSuite\UnitTesting\TestResult;
 
@@ -56,6 +59,31 @@ final class Plugin
     public function boot(): void
     {
         add_action('admin_menu', [$this, 'registerAdminMenu']);
+        add_action('cli_init', [$this, 'registerCliCommands']);
+        add_filter('ephpicman_commands', [$this, 'registerCommands']);
+    }
+
+    /** Registers the EphpicMan command gateway with WP-CLI. */
+    public function registerCliCommands(): void
+    {
+        $registry = new CommandRegistry();
+
+        /** @var CommandRegistry $registry */
+        $registry = apply_filters('ephpicman_commands', $registry);
+
+        (new Bridge($registry))->register();
+    }
+
+    /**
+     * Registers commands owned by Test Suite through the public command hook.
+     *
+     * Other plugins use the same filter to register their own commands.
+     */
+    public function registerCommands(CommandRegistry $registry): CommandRegistry
+    {
+        $registry->register(new TestCommand($this->getTestsDirectories()));
+
+        return $registry;
     }
 
     /**
