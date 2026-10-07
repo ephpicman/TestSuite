@@ -28,7 +28,7 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "EphpicMan\\TestSuite\\Tests\\": "tests/"
+            "EphpicMan\\TestSuite\\PHPUnit\\": "phpunit/"
         }
     },
     "require": {
