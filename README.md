@@ -106,6 +106,65 @@ my-plugin/
 
 Tests should use distinct namespaces. All registered test directories are loaded into the same PHP process, so class-name collisions must be avoided.
 
+## EphpicMan commands
+
+EphpicMan Test Suite provides a shared command API for EphpicMan products.
+
+The framework registers one WP-CLI gateway command:
+
+```bash
+wp epm
+```
+
+Commands are registered through the `ephpicman_commands` filter. Consumer plugins use the same hook as Test Suite itself:
+
+```php
+use EphpicMan\TestSuite\Command\CommandRegistry;
+use Acme\MyPlugin\Commands\CacheCommand;
+
+add_filter(
+    'ephpicman_commands',
+    function (CommandRegistry $commands): CommandRegistry {
+        $commands->register(new CacheCommand());
+
+        return $commands;
+    }
+);
+```
+
+A command extends `EphpicMan\TestSuite\Command\Command` rather than depending directly on the underlying console implementation:
+
+```php
+use EphpicMan\TestSuite\Command\Command;
+use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Output\OutputInterface;
+
+final class CacheCommand extends Command
+{
+    public function __construct()
+    {
+        parent::__construct('cache', 'Manage the plugin cache.');
+    }
+
+    protected function execute(
+        InputInterface $input,
+        OutputInterface $output
+    ): int {
+        // ...
+
+        return self::SUCCESS;
+    }
+}
+```
+
+The resulting command is available as:
+
+```bash
+wp epm cache
+```
+
+WP-CLI remains responsible for WordPress bootstrapping and command execution. Symfony Console provides the internal command engine.
+
 ## Running tests
 
 When EphpicMan Test Suite is active, users with the required WordPress capability can open:
@@ -140,6 +199,9 @@ The main consumer-facing API is:
 - `EphpicMan\TestSuite\UnitTesting\TestResult`
 - `EphpicMan\TestSuite\UnitTesting\Failure`
 - `ephpicman_test_directories`
+- `EphpicMan\\TestSuite\\Command\\Command`
+- `EphpicMan\\TestSuite\\Command\\CommandRegistry`
+- `ephpicman_commands`
 
 Consumer plugins should normally extend `UnitTest` and register their test directory. They should not depend on the internal PHPUnit adapter classes.
 
@@ -205,6 +267,8 @@ The `tests/` directory contains tests that exercise the plugin's WordPress-facin
 
 ```text
 src/                    Production code
+src/Command/            Shared command infrastructure and WP-CLI bridge
+src/Commands/            Test Suite's concrete commands
 src/UnitTesting/        Public testing API and PHPUnit integration
 tests/                  Runtime/self-hosting tests
 phpunit/                PHPUnit tests for the Test Suite itself
