@@ -46,10 +46,14 @@ final class Bridge
         $argv = $this->getEphpicManArgv();
 
         $application = new Application($this->registry);
-        $application->run(
+        $exitCode = $application->run(
             new ArgvInput($argv),
             new ConsoleOutput()
         );
+
+        if ($exitCode !== 0) {
+            \WP_CLI::halt($exitCode);
+        }
     }
 
     /** @return list<string> Arguments beginning with the EphpicMan command name. */
