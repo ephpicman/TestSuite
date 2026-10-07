@@ -7,12 +7,20 @@ namespace EphpicMan\TestSuite\UnitTesting;
 use ReflectionClass;
 use Throwable;
 
+/**
+ * Discovers EphpicMan test classes and delegates their execution to PHPUnit.
+ *
+ * The Runner owns WordPress/EphpicMan test discovery. PHPUnit remains
+ * responsible for test lifecycle, assertions and execution.
+ */
 final class Runner
 {
-    /** @var list<string> */
+    /** @var list<string> Absolute paths to registered test directories. */
     private array $testsDirectories;
 
-    /** @param string|list<string> $testsDirectories */
+    /**
+     * @param string|list<string> $testsDirectories One directory or multiple test directories.
+     */
     public function __construct(string|array $testsDirectories)
     {
         $this->testsDirectories = is_array($testsDirectories)
@@ -20,9 +28,21 @@ final class Runner
             : [$testsDirectories];
     }
 
-    /** @return list<TestResult> */
+    /**
+     * Loads, discovers and executes the registered tests.
+     *
+     * A Runner failure is returned as a TestResult rather than allowed to
+     * break the WordPress admin request.
+     *
+     * @return list<TestResult> Results produced by PHPUnit.
+     */
     public function run(): array
     {
+        /*
+         * Only classes declared by the files loaded during this invocation
+         * belong to this discovery pass. This also prevents nested Runner
+         * calls from rediscovering an outer Runner's test classes.
+         */
         $declaredClasses = get_declared_classes();
 
         $this->loadTests();
@@ -49,6 +69,12 @@ final class Runner
         }
     }
 
+    /**
+     * Loads test files from every registered directory.
+     *
+     * Only direct `*Test.php` files are loaded. Directory registration is
+     * controlled by plugin code rather than user input.
+     */
     private function loadTests(): void
     {
         foreach ($this->testsDirectories as $directory) {
@@ -66,7 +92,10 @@ final class Runner
     }
 
     /**
-     * @param list<class-string> $declaredClasses
+     * Finds concrete UnitTest subclasses declared by this discovery pass.
+     *
+     * @param list<class-string> $declaredClasses Classes already loaded before discovery.
+     *
      * @return list<class-string<UnitTest>>
      */
     private function findTestClasses(array $declaredClasses): array
