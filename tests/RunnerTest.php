@@ -58,7 +58,18 @@ final class RunnerTest extends UnitTest
         $shortClass = substr($class, $separator + 1);
 
         $content = sprintf(
-            "<?php\n\ndeclare(strict_types=1);\n\nnamespace %s;\n\nuse EphpicMan\\\\TestSuite\\\\UnitTesting\\\\UnitTest;\n\nfinal class %s extends UnitTest\n{\n    %s\n}\n",
+            '<?php
+declare(strict_types=1);
+
+namespace %s;
+
+use EphpicMan\TestSuite\UnitTesting\UnitTest;
+
+final class %s extends UnitTest
+{
+    %s
+}
+',
             $namespace,
             $shortClass,
             $method
