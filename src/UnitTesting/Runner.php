@@ -26,29 +26,27 @@ final class Runner
         $declaredClasses = get_declared_classes();
 
         $this->loadTests();
-        $results = [];
 
-        foreach ($this->findTestClasses($declaredClasses) as $class) {
-            try {
-                /** @psalm-suppress UnsafeInstantiation */
-                $test = new $class();
+        $testClasses = $this->findTestClasses($declaredClasses);
 
-                foreach ($test->runTests() as $result) {
-                    $results[] = $result;
-                }
-            } catch (Throwable $exception) {
-                $results[] = new TestResult(
-                    $class,
-                    '__construct',
+        if ($testClasses === []) {
+            return [];
+        }
+
+        try {
+            return (new PhpUnitRunner())->run($testClasses);
+        } catch (Throwable $exception) {
+            return [
+                new TestResult(
+                    Runner::class,
+                    '__runner',
                     0.0,
                     0,
                     null,
                     $exception->getMessage()
-                );
-            }
+                ),
+            ];
         }
-
-        return $results;
     }
 
     private function loadTests(): void
