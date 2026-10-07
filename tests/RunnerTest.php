@@ -38,6 +38,7 @@ final class RunnerTest extends UnitTest
         );
 
         try {
+            /** @psalm-suppress UnresolvableInclude */
             require_once $directory . '/PreloadedFixtureTest.php';
 
             $results = (new Runner($directory))->run();
