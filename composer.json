@@ -8,10 +8,10 @@
         "testing",
         "wordpress"
     ],
-    "homepage": "https://github.com/EphpicMan/TestSuite",
+    "homepage": "https://github.com/ephpicman/TestSuite",
     "support": {
-        "issues": "https://github.com/EphpicMan/TestSuite/issues",
-        "source": "https://github.com/EphpicMan/TestSuite"
+        "issues": "https://github.com/ephpicman/TestSuite/issues",
+        "source": "https://github.com/ephpicman/TestSuite"
     },
     "authors": [
         {
@@ -23,16 +23,22 @@
     ],
     "autoload": {
         "psr-4": {
-            "EphpicMan\\TestSuite\\": "src/",
+            "EphpicMan\\TestSuite\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
             "EphpicMan\\TestSuite\\Tests\\": "tests/"
         }
     },
     "require": {
-        "php": "^8.2",
-        "friendsofphp/php-cs-fixer": "^3.95",
+        "php": "^8.2.27",
         "phpstan/phpstan": "^2.2",
         "phpunit/phpunit": "^11.5",
         "vimeo/psalm": "^6.16"
+    },
+    "require-dev": {
+        "friendsofphp/php-cs-fixer": "^3.95"
     },
     "scripts": {
         "test": "phpunit",
