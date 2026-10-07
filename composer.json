@@ -2,11 +2,11 @@
     "name": "ephpicman/test-suite",
     "description": "EphpicMan Test Suite.",
     "type": "project",
-    "license": "GPL-3-or-later",
+    "license": "GPL-3.0-or-later",
     "keywords": [
         "php",
         "testing",
-        "WordPress"
+        "wordpress"
     ],
     "homepage": "https://github.com/EphpicMan/TestSuite",
     "support": {
@@ -23,8 +23,8 @@
     ],
     "autoload": {
         "psr-4": {
-            "App\\": "src/",
-            "Tests\\": "tests/"
+            "EphpicMan\\TestSuite\\": "src/",
+            "EphpicMan\\TestSuite\\Tests\\": "tests/"
         }
     },
     "require": {
