@@ -75,7 +75,7 @@ final class Runner
         $testClasses = [];
 
         foreach ($classes as $class) {
-            if (!is_subclass_of($class, UnitTest::class)) {
+            if (! is_subclass_of($class, UnitTest::class)) {
                 continue;
             }
 
