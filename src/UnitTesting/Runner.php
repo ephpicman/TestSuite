@@ -31,6 +31,18 @@ final class Runner
     }
 
     /**
+     * Discovers all concrete tests in the registered directories.
+     *
+     * @return list<array{class: class-string<UnitTest>, method: string}>
+     */
+    public function discover(): array
+    {
+        $this->loadTests();
+
+        return (new PhpUnitRunner())->discover($this->findTestClasses());
+    }
+
+    /**
      * Loads, discovers and executes the registered tests.
      *
      * A Runner failure is returned as a TestResult rather than allowed to
@@ -65,6 +77,39 @@ final class Runner
     }
 
     /**
+     * Executes one discovered test method.
+     *
+     * @param class-string<UnitTest> $testClass
+     *
+     * @return list<TestResult>
+     */
+    public function runTest(string $testClass, string $testMethod): array
+    {
+        $this->loadTests();
+
+        $testClasses = $this->findTestClasses();
+
+        if (! in_array($testClass, $testClasses, true)) {
+            return [];
+        }
+
+        try {
+            return (new PhpUnitRunner())->runTest($testClass, $testMethod);
+        } catch (Throwable $exception) {
+            return [
+                new TestResult(
+                    $testClass,
+                    $testMethod,
+                    0.0,
+                    0,
+                    null,
+                    $exception->getMessage()
+                ),
+            ];
+        }
+    }
+
+    /**
      * Loads test files from every registered directory.
      *
      * Only direct *Test.php files are loaded. Directory registration is
@@ -89,11 +134,6 @@ final class Runner
     /**
      * Finds concrete UnitTest subclasses whose source files belong to the
      * directories registered for this Runner.
-     *
-     * Discovery is based on the reflected source file rather than a
-     * before/after declared-class snapshot. This is important in WordPress,
-     * where a plugin or Composer bootstrap may load a test class before the
-     * Runner is invoked.
      *
      * @return list<class-string<UnitTest>>
      */
