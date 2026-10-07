@@ -26,8 +26,13 @@ final class PluginTest extends UnitTest
         );
     }
 
-    public function testFiltersExistingTestDirectories(): void
+    public function testProvidesExistingTestDirectories(): void
     {
-        $this->assertTrue(method_exists(Plugin::instance(), 'getTestsDirectories'));
+        $directories = Plugin::instance()->getTestsDirectories();
+
+        $this->assertContains(
+            dirname(__DIR__) . '/tests',
+            $directories
+        );
     }
 }
