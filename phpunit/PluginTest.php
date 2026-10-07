@@ -22,6 +22,9 @@ final class PluginTest extends TestCase
 
     public function testExposesTestDirectoryConfiguration(): void
     {
-        $this->assertTrue(method_exists(Plugin::instance(), 'getTestsDirectories'));
+        $this->assertContains(
+            dirname(__DIR__) . '/tests',
+            Plugin::instance()->getTestsDirectories()
+        );
     }
 }
