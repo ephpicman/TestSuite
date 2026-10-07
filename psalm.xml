@@ -9,9 +9,9 @@
     <projectFiles>
         <directory name="src" />
         <directory name="phpunit" />
+        <directory name="tests" />
         <ignoreFiles>
             <directory name="vendor" />
-            <directory name="tests" />
             <file name="src/Plugin.php" />
         </ignoreFiles>
     </projectFiles>
