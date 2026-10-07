@@ -23,10 +23,12 @@ final class Runner
     /** @return list<TestResult> */
     public function run(): array
     {
+        $declaredClasses = get_declared_classes();
+
         $this->loadTests();
         $results = [];
 
-        foreach ($this->findTestClasses() as $class) {
+        foreach ($this->findTestClasses($declaredClasses) as $class) {
             try {
                 $test = new $class();
 
@@ -59,12 +61,20 @@ final class Runner
         }
     }
 
-    /** @return list<class-string<UnitTest>> */
-    private function findTestClasses(): array
+    /**
+     * @param list<class-string> $declaredClasses
+     * @return list<class-string<UnitTest>>
+     */
+    private function findTestClasses(array $declaredClasses): array
     {
-        $classes = [];
+        $classes = array_diff(
+            get_declared_classes(),
+            $declaredClasses
+        );
 
-        foreach (get_declared_classes() as $class) {
+        $testClasses = [];
+
+        foreach ($classes as $class) {
             if (!is_subclass_of($class, UnitTest::class)) {
                 continue;
             }
@@ -75,9 +85,9 @@ final class Runner
                 continue;
             }
 
-            $classes[] = $class;
+            $testClasses[] = $class;
         }
 
-        return $classes;
+        return array_values($testClasses);
     }
 }
