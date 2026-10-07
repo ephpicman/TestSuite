@@ -38,16 +38,9 @@ final class Runner
      */
     public function run(): array
     {
-        /*
-         * Only classes declared by the files loaded during this invocation
-         * belong to this discovery pass. This also prevents nested Runner
-         * calls from rediscovering an outer Runner's test classes.
-         */
-        $declaredClasses = get_declared_classes();
-
         $this->loadTests();
 
-        $testClasses = $this->findTestClasses($declaredClasses);
+        $testClasses = $this->findTestClasses();
 
         if ($testClasses === []) {
             return [];
@@ -72,7 +65,7 @@ final class Runner
     /**
      * Loads test files from every registered directory.
      *
-     * Only direct `*Test.php` files are loaded. Directory registration is
+     * Only direct *Test.php files are loaded. Directory registration is
      * controlled by plugin code rather than user input.
      */
     private function loadTests(): void
@@ -92,22 +85,26 @@ final class Runner
     }
 
     /**
-     * Finds concrete UnitTest subclasses declared by this discovery pass.
+     * Finds concrete UnitTest subclasses whose source files belong to the
+     * directories registered for this Runner.
      *
-     * @param list<class-string> $declaredClasses Classes already loaded before discovery.
+     * Discovery is based on the reflected source file rather than a
+     * before/after declared-class snapshot. This is important in WordPress,
+     * where a plugin or Composer bootstrap may load a test class before the
+     * Runner is invoked.
      *
      * @return list<class-string<UnitTest>>
      */
-    private function findTestClasses(array $declaredClasses): array
+    private function findTestClasses(): array
     {
-        $classes = array_diff(
-            get_declared_classes(),
-            $declaredClasses
+        $directories = array_map(
+            static fn (string $directory): string => realpath($directory) ?: $directory,
+            $this->testsDirectories
         );
 
         $testClasses = [];
 
-        foreach ($classes as $class) {
+        foreach (get_declared_classes() as $class) {
             if (! is_subclass_of($class, UnitTest::class)) {
                 continue;
             }
@@ -118,7 +115,26 @@ final class Runner
                 continue;
             }
 
-            $testClasses[] = $class;
+            $file = $reflection->getFileName();
+
+            if ($file === false) {
+                continue;
+            }
+
+            $file = realpath($file) ?: $file;
+
+            foreach ($directories as $directory) {
+                $directory = rtrim($directory, DIRECTORY_SEPARATOR);
+
+                if (
+                    $file === $directory
+                    || str_starts_with($file, $directory . DIRECTORY_SEPARATOR)
+                ) {
+                    $testClasses[] = $class;
+
+                    break;
+                }
+            }
         }
 
         return $testClasses;
