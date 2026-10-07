@@ -12,13 +12,24 @@ use PHPUnit\TextUI\TestRunner;
 use ReflectionClass;
 
 /**
+ * Adapts EphpicMan test classes to PHPUnit's programmatic test runner.
+ *
+ * This class is intentionally internal to the Test Suite. Consumer plugins
+ * should extend UnitTest and use Runner rather than depending on this adapter.
+ *
  * @psalm-suppress InternalMethod
  */
 final class PhpUnitRunner
 {
     /**
-     * @param list<class-string<UnitTest>> $testClasses
-     * @return list<TestResult>
+     * Executes the supplied test classes through PHPUnit.
+     *
+     * PHPUnit's Text UI components are used programmatically so the Test Suite
+     * can retain its WordPress admin interface without invoking the CLI.
+     *
+     * @param list<class-string<UnitTest>> $testClasses Concrete test classes to execute.
+     *
+     * @return list<TestResult> Normalised results collected from PHPUnit events.
      */
     public function run(array $testClasses): array
     {
