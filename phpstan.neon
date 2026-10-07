@@ -3,6 +3,7 @@ parameters:
     paths:
         - src
         - phpunit
+        - tests
     excludePaths:
         analyse:
             - src/Plugin.php
