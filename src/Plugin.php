@@ -110,6 +110,8 @@ final class Plugin
      */
     public function renderUnitTestingPage(): void
     {
+        $runner = new Runner($this->getTestsDirectories());
+        $tests = $runner->discover();
         $results = null;
 
         if (
@@ -118,8 +120,30 @@ final class Plugin
         ) {
             check_admin_referer('ephpicman_run_tests');
 
-            $runner = new Runner($this->getTestsDirectories());
             $results = $runner->run();
+        } elseif (
+            isset($_POST['ephpicman_run_test'])
+            && current_user_can('manage_options')
+        ) {
+            check_admin_referer('ephpicman_run_test');
+
+            $testClass = isset($_POST['ephpicman_test_class'])
+                ? sanitize_text_field(wp_unslash($_POST['ephpicman_test_class']))
+                : '';
+            $testMethod = isset($_POST['ephpicman_test_method'])
+                ? sanitize_text_field(wp_unslash($_POST['ephpicman_test_method']))
+                : '';
+
+            foreach ($tests as $test) {
+                if (
+                    $test['class'] === $testClass
+                    && $test['method'] === $testMethod
+                ) {
+                    $results = $runner->runTest($test['class'], $test['method']);
+
+                    break;
+                }
+            }
         }
 
         $total = is_array($results) ? count($results) : 0;
@@ -136,8 +160,49 @@ final class Plugin
 
             <form method="post">
                 <?php wp_nonce_field('ephpicman_run_tests'); ?>
-                <?php submit_button('Run Unit Tests', 'primary', 'ephpicman_run_tests'); ?>
+                <?php submit_button('Run All Unit Tests', 'primary', 'ephpicman_run_tests'); ?>
             </form>
+
+            <h2>Tests</h2>
+
+            <?php if ($tests === []) : ?>
+                <p>No tests found.</p>
+            <?php else : ?>
+                <table class="widefat striped">
+                    <thead>
+                        <tr>
+                            <th>Test</th>
+                            <th>Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php foreach ($tests as $test) : ?>
+                            <tr>
+                                <td>
+                                    <strong><?php echo esc_html($test['class']); ?></strong><br>
+                                    <code><?php echo esc_html($test['method']); ?></code>
+                                </td>
+                                <td>
+                                    <form method="post">
+                                        <?php wp_nonce_field('ephpicman_run_test'); ?>
+                                        <input
+                                            type="hidden"
+                                            name="ephpicman_test_class"
+                                            value="<?php echo esc_attr($test['class']); ?>"
+                                        >
+                                        <input
+                                            type="hidden"
+                                            name="ephpicman_test_method"
+                                            value="<?php echo esc_attr($test['method']); ?>"
+                                        >
+                                        <?php submit_button('Run', 'secondary', 'ephpicman_run_test', false); ?>
+                                    </form>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            <?php endif; ?>
 
             <?php if ($results !== null) : ?>
                 <h2>Results</h2>
