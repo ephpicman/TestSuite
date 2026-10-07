@@ -38,7 +38,7 @@ final class PhpUnitRunner
             $suite->addTestSuite($reflection);
         }
 
-        $collector = new PhpUnitResultCollector;
+        $collector = new PhpUnitResultCollector($testClasses);
 
         EventFacade::instance()->registerTracer($collector);
 
