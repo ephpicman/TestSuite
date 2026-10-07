@@ -64,6 +64,7 @@ final class UnitTestTest extends TestCase
             /** @var list<string> */
             private array $events = [];
 
+            #[\Override]
             protected function setUp(): void
             {
                 $this->events[] = 'setUp';
@@ -74,6 +75,7 @@ final class UnitTestTest extends TestCase
                 $this->events[] = 'test';
             }
 
+            #[\Override]
             protected function tearDown(): void
             {
                 $this->events[] = 'tearDown';
