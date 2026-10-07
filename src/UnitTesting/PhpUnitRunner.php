@@ -56,6 +56,15 @@ final class PhpUnitRunner
         /** @psalm-suppress InternalClass */
         EventFacade::instance()->registerTracer($collector);
 
+        /**
+         * PHPUnit's event dispatcher defers dispatching until the facade is
+         * sealed. The Text UI application performs this step before starting
+         * the test runner; programmatic execution must do the same.
+         *
+         * @psalm-suppress InternalClass
+         */
+        EventFacade::instance()->seal();
+
         /** @psalm-suppress InternalClass */
         (new TestRunner())->run(
             $configuration,
