@@ -18,4 +18,7 @@ if (! defined('ABSPATH')) {
     exit;
 }
 
-require __DIR__ . "/vendor/autoload.php";
+$composerLoader = require __DIR__ . '/vendor/autoload.php';
+
+$autoloader = new \EphpicMan\TestSuite\Autoloader($composerLoader);
+$autoloader->register();
