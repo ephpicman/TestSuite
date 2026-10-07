@@ -29,6 +29,27 @@ final class RunnerTest extends UnitTest
         }
     }
 
+    public function testRunsAClassLoadedBeforeRunner(): void
+    {
+        $class = 'EphpicMan\\TestSuite\\RuntimeFixtures\\PreloadedFixtureTest';
+        $directory = $this->createFixtureDirectory(
+            $class,
+            'public function testWorks(): void { $this->assertTrue(true); }'
+        );
+
+        try {
+            require_once $directory . '/PreloadedFixtureTest.php';
+
+            $results = (new Runner($directory))->run();
+
+            $this->assertCount(1, $results);
+            $this->assertTrue($results[0]->passed());
+            $this->assertSame('testWorks', $results[0]->method());
+        } finally {
+            $this->removeFixtureDirectory($directory);
+        }
+    }
+
     public function testReportsUnexpectedErrors(): void
     {
         $class = 'EphpicMan\\TestSuite\\RuntimeFixtures\\ErrorFixtureTest';
