@@ -1,23 +1,20 @@
 {
-    "name": "ephpicman/td-php",
-    "description": "A test-driven PHP project skeleton with PHPUnit, PHPStan, Psalm, and PHP CS Fixer preconfigured.",
+    "name": "ephpicman/test-suite",
+    "description": "EphpicMan Test Suite.",
     "type": "project",
     "license": "MIT",
     "keywords": [
         "php",
-        "skeleton",
-        "template",
-        "test-driven-development",
         "testing",
         "phpunit",
         "phpstan",
         "psalm",
         "php-cs-fixer"
     ],
-    "homepage": "https://github.com/EphpicMan/TD-PHP",
+    "homepage": "https://github.com/EphpicMan/TestSuite",
     "support": {
-        "issues": "https://github.com/EphpicMan/TD-PHP/issues",
-        "source": "https://github.com/EphpicMan/TD-PHP"
+        "issues": "https://github.com/EphpicMan/TestSuite/issues",
+        "source": "https://github.com/EphpicMan/TestSuite"
     },
     "authors": [
         {
@@ -29,18 +26,12 @@
     ],
     "autoload": {
         "psr-4": {
-            "App\\": "src/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
+            "App\\": "src/",
             "Tests\\": "tests/"
         }
     },
     "require": {
-        "php": "^8.2"
-    },
-    "require-dev": {
+        "php": "^8.2",
         "friendsofphp/php-cs-fixer": "^3.95",
         "phpstan/phpstan": "^2.2",
         "phpunit/phpunit": "^11.5",
