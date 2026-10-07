@@ -8,7 +8,7 @@ use PHPUnit\Event\Facade as EventFacade;
 use PHPUnit\Framework\TestCase;
 use PHPUnit\Framework\TestSuite;
 use PHPUnit\Runner\ResultCache\DefaultResultCache;
-use PHPUnit\TestRunner\Result\Facade as TestResultFacade;
+use PHPUnit\TestRunner\TestResult\Facade as TestResultFacade;
 use PHPUnit\TextUI\Configuration\Builder as ConfigurationBuilder;
 use PHPUnit\TextUI\TestRunner;
 use ReflectionClass;
