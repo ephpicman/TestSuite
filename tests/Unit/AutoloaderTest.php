@@ -49,7 +49,7 @@ final class AutoloaderTest extends TestCase
         self::assertFalse(
             class_exists(
                 'EphpicMan\\TestSuite\\Fixtures\\DoesNotExist',
-                false
+                true
             )
         );
     }
