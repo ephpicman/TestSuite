@@ -1,6 +1,12 @@
 <?php
 
 /**
+ * WordPress plugin bootstrap.
+ *
+ * The bootstrap intentionally contains only the WordPress guard, Composer
+ * autoloader loading and plugin bootstrapping. Application behaviour lives in
+ * the namespaced classes under src/.
+ *
  * Plugin Name:       EphpicMan Test Suite
  * Description:       Professional WordPress testing and diagnostic toolkit.
  * Version:           1.0
