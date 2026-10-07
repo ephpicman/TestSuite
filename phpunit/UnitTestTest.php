@@ -60,13 +60,9 @@ final class UnitTestTest extends TestCase
 
     public function testSetUpAndTearDownAreExecuted(): void
     {
-        $events = [];
-
-        $test = new class ($events) extends UnitTest {
-            /** @param list<string> $events */
-            public function __construct(private array &$events)
-            {
-            }
+        $test = new class () extends UnitTest {
+            /** @var list<string> */
+            private array $events = [];
 
             protected function setUp(): void
             {
@@ -82,11 +78,17 @@ final class UnitTestTest extends TestCase
             {
                 $this->events[] = 'tearDown';
             }
+
+            /** @return list<string> */
+            public function events(): array
+            {
+                return $this->events;
+            }
         };
 
         $results = $test->runTests();
 
         $this->assertTrue($results[0]->passed());
-        $this->assertSame(['setUp', 'test', 'tearDown'], $events);
+        $this->assertSame(['setUp', 'test', 'tearDown'], $test->events());
     }
 }
