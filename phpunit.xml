@@ -8,7 +8,7 @@
 
     <testsuites>
         <testsuite name="EphpicMan Test Suite">
-            <directory>tests</directory>
+            <directory>phpunit</directory>
         </testsuite>
     </testsuites>
 
