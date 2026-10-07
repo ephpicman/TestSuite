@@ -6,6 +6,7 @@ namespace EphpicMan\TestSuite\Tests;
 
 use EphpicMan\TestSuite\UnitTesting\Runner;
 use EphpicMan\TestSuite\UnitTesting\UnitTest;
+use RuntimeException;
 
 final class RunnerTest extends UnitTest
 {
@@ -54,6 +55,11 @@ final class RunnerTest extends UnitTest
         mkdir($directory, 0755, true);
 
         $separator = strrpos($class, '\\');
+
+        if ($separator === false) {
+            throw new RuntimeException('Fixture class must contain a namespace separator.');
+        }
+
         $namespace = substr($class, 0, $separator);
         $shortClass = substr($class, $separator + 1);
 
