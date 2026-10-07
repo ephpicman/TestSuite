@@ -16,7 +16,7 @@ final class Runner
     public function __construct(string|array $testsDirectories)
     {
         $this->testsDirectories = is_array($testsDirectories)
-            ? array_values($testsDirectories)
+            ? $testsDirectories
             : [$testsDirectories];
     }
 
@@ -88,6 +88,6 @@ final class Runner
             $testClasses[] = $class;
         }
 
-        return array_values($testClasses);
+        return $testClasses;
     }
 }
