@@ -20,7 +20,7 @@ final class AutoloaderTest extends TestCase
             __DIR__ . '/../fixtures'
         );
 
-        self::assertTrue(true);
+        $this->assertTrue($autoloader instanceof Autoloader);
     }
 
     public function testCanLoadClass(): void
