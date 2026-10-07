@@ -23,7 +23,7 @@ final class UnitTestTest extends UnitTest
 
     public function testFailedAssertionProducesStructuredResult(): void
     {
-        $fixture = new class extends UnitTest {
+        $fixture = new class () extends UnitTest {
             public function testFailure(): void
             {
                 $this->assertSame('expected', 'actual');
