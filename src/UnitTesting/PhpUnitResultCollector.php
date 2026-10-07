@@ -14,6 +14,9 @@ use PHPUnit\Event\Test\PreparationStarted;
 use PHPUnit\Event\Test\Skipped;
 use PHPUnit\Event\Tracer\Tracer;
 
+/**
+ * @psalm-suppress InternalMethod
+ */
 final class PhpUnitResultCollector implements Tracer
 {
     /** @var array<string, true> */
@@ -52,7 +55,11 @@ final class PhpUnitResultCollector implements Tracer
 
         $test = $event->test();
 
-        if (! $test instanceof TestMethod || ! isset($this->testClasses[$test->className()])) {
+        if (! $test instanceof TestMethod) {
+            return;
+        }
+
+        if (! isset($this->testClasses[$test->className()])) {
             return;
         }
 
