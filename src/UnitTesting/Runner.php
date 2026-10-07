@@ -43,6 +43,37 @@ final class Runner
     }
 
     /**
+     * Discovers individual test methods from the registered test files.
+     *
+     * Test files are already loaded by the Runner, so discovery only uses
+     * reflection. PHPUnit is intentionally not instantiated here: this method
+     * runs while the WordPress admin page is being rendered.
+     *
+     * @return list<array{class: class-string<UnitTest>, method: string}>
+     */
+    public function discover(): array
+    {
+        $this->loadTests();
+
+        $tests = [];
+
+        foreach ($this->findTestClasses() as $testClass) {
+            $reflection = new ReflectionClass($testClass);
+
+            foreach ($reflection->getMethods() as $method) {
+                if ($method->isPublic() && str_starts_with($method->getName(), 'test')) {
+                    $tests[] = [
+                        'class' => $testClass,
+                        'method' => $method->getName(),
+                    ];
+                }
+            }
+        }
+
+        return $tests;
+    }
+
+    /**
      * Loads, discovers and executes the registered tests.
      *
      * A Runner failure is returned as a TestResult rather than allowed to
