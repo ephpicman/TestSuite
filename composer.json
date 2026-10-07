@@ -2,14 +2,11 @@
     "name": "ephpicman/test-suite",
     "description": "EphpicMan Test Suite.",
     "type": "project",
-    "license": "MIT",
+    "license": "GPL-3-or-later",
     "keywords": [
         "php",
         "testing",
-        "phpunit",
-        "phpstan",
-        "psalm",
-        "php-cs-fixer"
+        "WordPress"
     ],
     "homepage": "https://github.com/EphpicMan/TestSuite",
     "support": {
@@ -19,7 +16,7 @@
     "authors": [
         {
             "name": "Sina Kuhestani",
-            "email": "sinakuhestani@gmail.com",
+            "email": "ephpicman@proton.me",
             "homepage": "https://github.com/EphpicMan",
             "role": "Developer"
         }

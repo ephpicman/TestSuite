@@ -14,8 +14,8 @@
 
 declare(strict_types=1);
 
-namespace EphpicMan\EphpicMan;
-
 if (! defined('ABSPATH')) {
     exit;
 }
+
+require __DIR__ . "/vendor/autoload.php";
