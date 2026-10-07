@@ -15,32 +15,45 @@ use PHPUnit\Event\Test\Skipped;
 use PHPUnit\Event\Tracer\Tracer;
 
 /**
+ * Converts PHPUnit test events into the stable EphpicMan result model.
+ *
+ * PHPUnit owns execution and failure semantics. This collector only observes
+ * those events and translates the information needed by the WordPress UI.
+ *
  * @psalm-suppress InternalMethod
+ * @psalm-suppress MissingOverrideAttribute
  */
-/** @psalm-suppress MissingOverrideAttribute */
 final class PhpUnitResultCollector implements Tracer
 {
-    /** @var array<string, true> */
+    /** @var array<string, true> Test classes belonging to this Runner invocation. */
     private array $testClasses;
 
-    /** @var array<string, float> */
+    /** @var array<string, float> Start timestamps keyed by PHPUnit test ID. */
     private array $startedAt = [];
 
-    /** @var array<string, Failure> */
+    /** @var array<string, Failure> Assertion failures keyed by PHPUnit test ID. */
     private array $failures = [];
 
-    /** @var array<string, string> */
+    /** @var array<string, string> Errors keyed by PHPUnit test ID. */
     private array $errors = [];
 
-    /** @var list<TestResult> */
+    /** @var list<TestResult> Completed test results. */
     private array $results = [];
 
-    /** @param list<class-string<UnitTest>> $testClasses */
+    /**
+     * @param list<class-string<UnitTest>> $testClasses Test classes owned by this collector.
+     */
     public function __construct(array $testClasses)
     {
         $this->testClasses = array_fill_keys($testClasses, true);
     }
 
+    /**
+     * Records relevant PHPUnit events for the configured test classes.
+     *
+     * PHPUnit's event facade is process-wide. Filtering by class here prevents
+     * a nested or unrelated PHPUnit execution from polluting this collector.
+     */
     /** @psalm-suppress MissingOverrideAttribute */
     public function trace(Event $event): void
     {
@@ -128,7 +141,11 @@ final class PhpUnitResultCollector implements Tracer
         );
     }
 
-    /** @return list<TestResult> */
+    /**
+     * Returns all completed results collected during this execution.
+     *
+     * @return list<TestResult>
+     */
     public function results(): array
     {
         return $this->results;
