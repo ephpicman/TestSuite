@@ -7,6 +7,7 @@ namespace EphpicMan\TestSuite\UnitTesting;
 use PHPUnit\Event\Facade as EventFacade;
 use PHPUnit\Framework\TestSuite;
 use PHPUnit\Runner\ResultCache\DefaultResultCache;
+use PHPUnit\TestRunner\TestResult\Facade as TestResultFacade;
 use PHPUnit\TextUI\Configuration\Builder as ConfigurationBuilder;
 use PHPUnit\TextUI\TestRunner;
 use ReflectionClass;
@@ -55,6 +56,9 @@ final class PhpUnitRunner
 
         /** @psalm-suppress InternalClass */
         EventFacade::instance()->registerTracer($collector);
+
+        /** @psalm-suppress InternalClass */
+        TestResultFacade::init();
 
         /**
          * PHPUnit's event dispatcher defers dispatching until the facade is
