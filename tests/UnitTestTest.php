@@ -5,15 +5,22 @@ declare(strict_types=1);
 namespace EphpicMan\TestSuite\Tests;
 
 use EphpicMan\TestSuite\UnitTesting\UnitTest;
-use RuntimeException;
+use PHPUnit\Framework\Attributes\DataProvider;
 
 final class UnitTestTest extends UnitTest
 {
-    public function testAssertionsTrackExpectedAndActualValues(): void
+    private bool $setUpRan = false;
+
+    protected function setUp(): void
     {
+        $this->setUpRan = true;
+    }
+
+    public function testPhpUnitAssertionsAndLifecycleWork(): void
+    {
+        $this->assertTrue($this->setUpRan);
         $this->assertSame(10, 10);
         $this->assertEquals('10', 10);
-        $this->assertTrue(true);
         $this->assertFalse(false);
         $this->assertNull(null);
         $this->assertNotNull('value');
@@ -22,27 +29,17 @@ final class UnitTestTest extends UnitTest
         $this->assertContains('two', ['one', 'two']);
     }
 
-    public function testFailedAssertionProducesStructuredResult(): void
+    #[DataProvider('additionProvider')]
+    public function testPhpUnitDataProviderWorks(int $a, int $b, int $expected): void
     {
-        $fixture = new class () extends UnitTest {
-            public function testFailure(): void
-            {
-                $this->assertSame('expected', 'actual');
-            }
-        };
+        $this->assertSame($expected, $a + $b);
+    }
 
-        $results = $fixture->runTests();
-
-        $this->assertCount(1, $results);
-        $this->assertFalse($results[0]->passed());
-
-        $failure = $results[0]->failure();
-
-        if ($failure === null) {
-            throw new RuntimeException('Expected a structured failure.');
-        }
-
-        $this->assertSame('expected', $failure->expected());
-        $this->assertSame('actual', $failure->actual());
+    /** @return iterable<string, array{int, int, int}> */
+    public static function additionProvider(): iterable
+    {
+        yield 'zero' => [0, 0, 0];
+        yield 'positive' => [2, 3, 5];
+        yield 'negative' => [-2, 3, 1];
     }
 }
