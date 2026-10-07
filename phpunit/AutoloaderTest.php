@@ -43,8 +43,12 @@ final class DynamicClass
             );
             $autoloader->register();
 
+            /** @psalm-suppress TypeDoesNotContainType */
             $this->assertTrue(class_exists($class));
-            $this->assertSame('loaded', (new $class())->value());
+            /** @psalm-suppress MixedMethodCall */
+            $instance = new $class();
+            /** @psalm-suppress MixedMethodCall */
+            $this->assertSame('loaded', $instance->value());
         } finally {
             $this->removeFixtureDirectory($directory);
         }
@@ -82,7 +86,13 @@ final class DynamicClass
 
     private function removeFixtureDirectory(string $directory): void
     {
-        foreach (glob($directory . '/*') ?: [] as $file) {
+        $files = glob($directory . '/*');
+
+        if ($files === false) {
+            return;
+        }
+
+        foreach ($files as $file) {
             unlink($file);
         }
 
