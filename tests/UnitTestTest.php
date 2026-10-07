@@ -11,6 +11,7 @@ final class UnitTestTest extends UnitTest
 {
     private bool $setUpRan = false;
 
+    /** @psalm-suppress MissingOverrideAttribute */
     protected function setUp(): void
     {
         $this->setUpRan = true;
