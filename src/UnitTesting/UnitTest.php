@@ -205,6 +205,9 @@ abstract class UnitTest implements Test
         );
     }
 
+    /**
+     * @param iterable<mixed> $actual
+     */
     protected function assertContains(mixed $expected, iterable $actual, string $message = ''): void
     {
         $this->assertions++;
