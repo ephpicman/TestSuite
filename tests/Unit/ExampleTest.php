@@ -2,9 +2,9 @@
 
 declare(strict_types=1);
 
-namespace Tests\Unit;
+namespace EphpicMan\TestSuite\Tests\Unit;
 
-use App\Example;
+use EphpicMan\TestSuite\Example;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -14,6 +14,6 @@ final class ExampleTest extends TestCase
 {
     public function testItGreets(): void
     {
-        self::assertSame('Hello, TD-PHP!', (new Example())->greet('TD-PHP'));
+        self::assertSame('Hello, EphpicMan!', (new Example())->greet('EphpicMan'));
     }
 }
