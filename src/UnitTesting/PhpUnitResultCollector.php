@@ -95,12 +95,8 @@ final class PhpUnitResultCollector implements Tracer
         }
 
         if ($event instanceof MarkedIncomplete) {
-            $this->errors[$id] = 'Incomplete: ' . $event->message();
+            $this->errors[$id] = 'Incomplete: ' . $event->throwable()->message();
 
-            return;
-        }
-
-        if (! $event instanceof Finished) {
             return;
         }
 
