@@ -7,6 +7,7 @@ namespace EphpicMan\TestSuite\Tests;
 use EphpicMan\TestSuite\UnitTesting\UnitTest;
 use PHPUnit\Framework\Attributes\DataProvider;
 
+/** @psalm-suppress MissingOverrideAttribute */
 final class UnitTestTest extends UnitTest
 {
     private bool $setUpRan = false;
