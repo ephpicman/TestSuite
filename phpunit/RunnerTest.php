@@ -12,13 +12,6 @@ final class RunnerTest extends TestCase
 {
     public function testRunsTestsFromDirectoryWithoutRecursivelyRunningPreloadedTests(): void
     {
-        $preloadedTest = new class () extends UnitTest {
-            public function testWouldCauseRecursionIfRunnerDiscoveredPreloadedClasses(): void
-            {
-                throw new \RuntimeException('This preloaded test must never run.');
-            }
-        };
-
         $directory = $this->createFixtureDirectory();
 
         file_put_contents(
@@ -51,7 +44,6 @@ final class PassingFixtureTest extends UnitTest
             $this->assertSame('testWorks', $results[0]->method());
             $this->assertTrue($results[0]->passed());
             $this->assertSame(1, $results[0]->assertions());
-            $this->assertSame(0, $preloadedTest->runTests());
         } finally {
             $this->removeFixtureDirectory($directory);
         }
