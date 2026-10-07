@@ -88,7 +88,13 @@ final class %s extends UnitTest
 
     private function removeFixtureDirectory(string $directory): void
     {
-        foreach (glob($directory . '/*') ?: [] as $file) {
+        $files = glob($directory . '/*');
+
+        if ($files === false) {
+            return;
+        }
+
+        foreach ($files as $file) {
             unlink($file);
         }
 
