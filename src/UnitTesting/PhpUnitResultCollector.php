@@ -40,6 +40,7 @@ final class PhpUnitResultCollector implements Tracer
         $this->testClasses = array_fill_keys($testClasses, true);
     }
 
+    /** @psalm-suppress MissingOverrideAttribute */
     public function trace(Event $event): void
     {
         if (
