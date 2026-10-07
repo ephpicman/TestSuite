@@ -9,7 +9,7 @@ It is designed for EphpicMan plugins that need a consistent way to:
 - run those tests from the WordPress admin area;
 - present useful results to a WordPress administrator.
 
-The project uses `PHPUnit as its test engine. EphpicMan Test Suite does not implement a second assertion or test-execution framework.
+The project uses `PHPUnit` as its test engine. EphpicMan Test Suite does not implement a second assertion or test-execution framework.
 
 ## Requirements
 
@@ -19,9 +19,9 @@ The project uses `PHPUnit as its test engine. EphpicMan Test Suite does not impl
 
 ## How it works
 
-A consumer plugin extends the public `UnitTest class:
+A consumer plugin extends the public `UnitTest` class:
 
-`@php
+```php
 <?php
 
 namespace Acme\MyPlugin\Tests;
@@ -35,11 +35,11 @@ final class CalculatorTest extends UnitTest
         $this->assertSame(5, 2 + 3);
     }
 }
-`@
+```
 
 The inheritance chain is:
 
-`@text
+```text
 YourPluginTest
     ↓
 EphpicMan\TestSuite\UnitTesting\UnitTest
@@ -47,13 +47,13 @@ EphpicMan\TestSuite\UnitTesting\UnitTest
 PHPUnit\Framework\TestCase
     ↓
 PHPUnit
-`@
+```
 
-This means consumer plugins use PHPUnit's `TestCase API rather than a second, EphpicMan-specific assertion API.
+This means consumer plugins use PHPUnit's `TestCase` API rather than a second, EphpicMan-specific assertion API.
 
 For example:
 
-`@php
+```php
 final class ProductTest extends UnitTest
 {
     public function testProductIsActive(): void
@@ -70,15 +70,15 @@ final class ProductTest extends UnitTest
         new Product('');
     }
 }
-`@
+```
 
-PHPUnit features such as assertions, fixtures, data providers, exception expectations and other supported `TestCase features are provided by PHPUnit itself.
+PHPUnit features such as assertions, fixtures, data providers, exception expectations and other supported `TestCase` features are provided by PHPUnit itself.
 
 ## Registering tests from another plugin
 
-A plugin can register one or more test directories with the `ephpicman_test_directories filter:
+A plugin can register one or more test directories with the `ephpicman_test_directories` filter:
 
-`@php
+```php
 add_filter(
     'ephpicman_test_directories',
     function (array $directories): array {
@@ -87,22 +87,22 @@ add_filter(
         return $directories;
     }
 );
-`@
+```
 
-The Test Suite also registers its own `tests/ directory by default.
+The Test Suite also registers its own `tests/` directory by default.
 
-Test files must use the `*Test.php filename convention.
+Test files must use the `*Test.php` filename convention.
 
 A typical plugin structure is:
 
-`@text
+```text
 my-plugin/
 ├── my-plugin.php
 ├── src/
 └── tests/
     ├── ProductTest.php
     └── SettingsTest.php
-`@
+```
 
 Tests should use distinct namespaces. All registered test directories are loaded into the same PHP process, so class-name collisions must be avoided.
 
@@ -115,7 +115,7 @@ When EphpicMan Test Suite is active, users with the required WordPress capabilit
 The Test Suite:
 
 1. loads registered test files;
-2. discovers concrete classes extending `UnitTest;
+2. discovers concrete classes extending `UnitTest`;
 3. creates a PHPUnit test suite;
 4. executes the tests through PHPUnit;
 5. translates PHPUnit events into the Test Suite's result model;
@@ -135,19 +135,19 @@ The result view includes:
 
 The main consumer-facing API is:
 
-- `EphpicMan\TestSuite\UnitTesting\UnitTest
-- `EphpicMan\TestSuite\UnitTesting\Runner
-- `EphpicMan\TestSuite\UnitTesting\TestResult
-- `EphpicMan\TestSuite\UnitTesting\Failure
-- `ephpicman_test_directories
+- `EphpicMan\TestSuite\UnitTesting\UnitTest`
+- `EphpicMan\TestSuite\UnitTesting\Runner`
+- `EphpicMan\TestSuite\UnitTesting\TestResult`
+- `EphpicMan\TestSuite\UnitTesting\Failure`
+- `ephpicman_test_directories`
 
-Consumer plugins should normally extend `UnitTest and register their test directory. They should not depend on the internal PHPUnit adapter classes.
+Consumer plugins should normally extend `UnitTest` and register their test directory. They should not depend on the internal PHPUnit adapter classes.
 
 ## Architecture
 
 The project separates the WordPress integration layer from the test engine:
 
-`@text
+```text
 WordPress
    │
    ├── Admin UI
@@ -158,15 +158,15 @@ WordPress
             └── PHPUnit adapter
                     │
                     └── PHPUnit
-`@
+```
 
-The classes under `src/UnitTesting/ named `PhpUnitRunner and `PhpUnitResultCollector are implementation details. They isolate PHPUnit integration from the public EphpicMan API.
+The classes under `src/UnitTesting/` named `PhpUnitRunner` and `PhpUnitResultCollector` are implementation details. They isolate PHPUnit integration from the public EphpicMan API.
 
 ## Autoloading
 
 Composer provides the project's dependency and PSR-4 autoloading infrastructure.
 
-The `Autoloader class preserves the existing `addNamespace() and `register() API while delegating class loading to Composer's `ClassLoader.
+The `Autoloader` class preserves the existing `addNamespace()` and `register()` API while delegating class loading to Composer's `ClassLoader`.
 
 This avoids maintaining a second PSR-4 implementation.
 
@@ -174,21 +174,21 @@ This avoids maintaining a second PSR-4 implementation.
 
 Install dependencies:
 
-`@bash
+```bash
 composer install
-`@
+```
 
 Run PHPUnit:
 
-`@bash
+```bash
 composer test
-`@
+```
 
 Run the complete quality gate:
 
-`@bash
+```bash
 composer run check-all
-`@
+```
 
 The complete quality gate runs:
 
@@ -197,19 +197,19 @@ The complete quality gate runs:
 - Psalm;
 - PHPUnit.
 
-The PHPUnit suite in `phpunit/ tests EphpicMan Test Suite itself.
+The PHPUnit suite in `phpunit/` tests EphpicMan Test Suite itself.
 
-The `tests/ directory contains tests that exercise the plugin's WordPress-facing runtime test system.
+The `tests/` directory contains tests that exercise the plugin's WordPress-facing runtime test system.
 
 ## Repository structure
 
-`@text
+```text
 src/                    Production code
 src/UnitTesting/        Public testing API and PHPUnit integration
 tests/                  Runtime/self-hosting tests
 phpunit/                PHPUnit tests for the Test Suite itself
 .github/workflows/      Continuous integration
-`@
+```
 
 For more detail, see [docs/architecture.md](docs/architecture.md) and [CONTRIBUTING.md](CONTRIBUTING.md).
 
