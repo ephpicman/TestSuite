@@ -213,6 +213,7 @@ abstract class UnitTest implements Test
     {
         $this->assertions++;
 
+        /** @psalm-suppress MixedAssignment */
         foreach ($actual as $value) {
             if ($value === $expected) {
                 return;
