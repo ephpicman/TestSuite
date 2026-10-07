@@ -23,5 +23,12 @@
                 <directory name="tests" />
             </errorLevel>
         </UnusedClass>
+
+        <MissingOverrideAttribute>
+            <errorLevel type="suppress">
+                <directory name="src/UnitTesting" />
+                <directory name="tests" />
+            </errorLevel>
+        </MissingOverrideAttribute>
     </issueHandlers>
 </psalm>
