@@ -15,4 +15,13 @@
             <file name="src/Plugin.php" />
         </ignoreFiles>
     </projectFiles>
+
+    <issueHandlers>
+        <UnusedClass>
+            <errorLevel type="suppress">
+                <directory name="phpunit" />
+                <directory name="tests" />
+            </errorLevel>
+        </UnusedClass>
+    </issueHandlers>
 </psalm>
