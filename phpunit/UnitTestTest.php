@@ -14,8 +14,4 @@ final class UnitTestTest extends TestCase
         $this->assertSame(TestCase::class, get_parent_class(UnitTest::class));
     }
 
-    public function testExposesPhpUnitAssertions(): void
-    {
-        $this->assertTrue(is_a(UnitTest::class, TestCase::class, true));
-    }
 }
