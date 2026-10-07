@@ -89,13 +89,13 @@ final class PhpUnitResultCollector implements Tracer
         }
 
         if ($event instanceof Skipped) {
-            $this->errors[$id] = 'Skipped: ' . $event->throwable()->message();
+            $this->errors[$id] = 'Skipped: ' . $event->message();
 
             return;
         }
 
         if ($event instanceof MarkedIncomplete) {
-            $this->errors[$id] = 'Incomplete: ' . $event->throwable()->message();
+            $this->errors[$id] = 'Incomplete: ' . $event->message();
 
             return;
         }
