@@ -40,11 +40,13 @@ final class PhpUnitRunner
 
         $collector = new PhpUnitResultCollector($testClasses);
 
+        /** @psalm-suppress InternalClass */
         EventFacade::instance()->registerTracer($collector);
 
         /** @psalm-suppress InternalClass */
         (new TestRunner())->run(
             $configuration,
+            /** @psalm-suppress InternalClass */
             new DefaultResultCache,
             $suite
         );
