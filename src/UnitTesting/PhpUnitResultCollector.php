@@ -7,10 +7,10 @@ namespace EphpicMan\TestSuite\UnitTesting;
 use PHPUnit\Event\Code\TestMethod;
 use PHPUnit\Event\Event;
 use PHPUnit\Event\Test\Finished;
-use PHPUnit\Event\Test\Outcome\Errored;
-use PHPUnit\Event\Test\Outcome\Failed;
-use PHPUnit\Event\Test\Outcome\MarkedIncomplete;
-use PHPUnit\Event\Test\Outcome\Skipped;
+use PHPUnit\Event\Test\Errored;
+use PHPUnit\Event\Test\Failed;
+use PHPUnit\Event\Test\MarkedIncomplete;
+use PHPUnit\Event\Test\Skipped;
 use PHPUnit\Event\Test\PreparationStarted;
 use PHPUnit\Event\Tracer\Tracer;
 
