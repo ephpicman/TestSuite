@@ -31,18 +31,6 @@ final class Runner
     }
 
     /**
-     * Discovers all concrete tests in the registered directories.
-     *
-     * @return list<array{class: class-string<UnitTest>, method: string}>
-     */
-    public function discover(): array
-    {
-        $this->loadTests();
-
-        return (new PhpUnitRunner())->discover($this->findTestClasses());
-    }
-
-    /**
      * Discovers individual test methods from the registered test files.
      *
      * Test files are already loaded by the Runner, so discovery only uses
