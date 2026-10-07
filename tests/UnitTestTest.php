@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace EphpicMan\TestSuite\Tests;
 
 use EphpicMan\TestSuite\UnitTesting\UnitTest;
+use RuntimeException;
 
 final class UnitTestTest extends UnitTest
 {
@@ -34,8 +35,14 @@ final class UnitTestTest extends UnitTest
 
         $this->assertCount(1, $results);
         $this->assertFalse($results[0]->passed());
-        $this->assertNotNull($results[0]->failure());
-        $this->assertSame('expected', $results[0]->failure()->expected());
-        $this->assertSame('actual', $results[0]->failure()->actual());
+
+        $failure = $results[0]->failure();
+
+        if ($failure === null) {
+            throw new RuntimeException('Expected a structured failure.');
+        }
+
+        $this->assertSame('expected', $failure->expected());
+        $this->assertSame('actual', $failure->actual());
     }
 }
