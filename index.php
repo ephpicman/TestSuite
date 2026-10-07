@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Plugin Name:       EpicMan
+ * Plugin Name:       EphpicMan Test Suite
  * Description:       Professional WordPress testing and diagnostic toolkit.
  * Version:           1.0
  * Requires at least: 6.5
