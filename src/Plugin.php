@@ -7,12 +7,21 @@ namespace EphpicMan\TestSuite;
 use EphpicMan\TestSuite\UnitTesting\Runner;
 use EphpicMan\TestSuite\UnitTesting\TestResult;
 
+/**
+ * WordPress entry point for EphpicMan Test Suite.
+ *
+ * The plugin owns WordPress integration and exposes the test directory filter
+ * used by other plugins to register their tests.
+ */
 final class Plugin
 {
     private static ?self $instance = null;
 
     private Autoloader $autoloader;
 
+    /**
+     * Creates the plugin service and registers its Composer-backed autoloader.
+     */
     private function __construct()
     {
         $this->autoloader = new Autoloader(
@@ -27,21 +36,33 @@ final class Plugin
         $this->autoloader->register();
     }
 
+    /**
+     * Returns the shared plugin instance.
+     *
+     * The singleton keeps WordPress hooks and process-wide configuration in one place.
+     */
     public static function instance(): self
     {
         return self::$instance ??= new self();
     }
 
+    /** Returns the Composer-backed EphpicMan autoloader. */
     public function autoloader(): Autoloader
     {
         return $this->autoloader;
     }
 
+    /** Registers the plugin's WordPress hooks. */
     public function boot(): void
     {
         add_action('admin_menu', [$this, 'registerAdminMenu']);
     }
 
+    /**
+     * Registers the Unit Testing admin page.
+     *
+     * Access is restricted to users who can manage WordPress options.
+     */
     public function registerAdminMenu(): void
     {
         add_menu_page(
@@ -54,6 +75,11 @@ final class Plugin
         );
     }
 
+    /**
+     * Renders the Unit Testing admin page and handles test execution.
+     *
+     * Test execution requires the manage_options capability and a valid nonce.
+     */
     public function renderUnitTestingPage(): void
     {
         $results = null;
@@ -143,7 +169,14 @@ final class Plugin
         <?php
     }
 
-    /** @return list<string> */
+    /**
+     * Returns all valid test directories registered for the current request.
+     *
+     * The Test Suite's own tests/ directory is always included first. Other
+     * plugins can append directories with the ephpicman_test_directories filter.
+     *
+     * @return list<string> Existing, unique test directory paths.
+     */
     public function getTestsDirectories(): array
     {
         $directories = [dirname(__DIR__) . '/tests'];
