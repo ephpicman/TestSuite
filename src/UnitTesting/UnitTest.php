@@ -34,6 +34,7 @@ abstract class UnitTest implements Test
             $this->assertions = 0;
             $started = microtime(true);
             $failure = null;
+            /** @psalm-suppress UnusedVariable */
             $error = null;
 
             try {
