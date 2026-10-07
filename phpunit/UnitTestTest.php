@@ -16,8 +16,6 @@ final class UnitTestTest extends TestCase
 
     public function testExposesPhpUnitAssertions(): void
     {
-        $this->assertTrue(method_exists(UnitTest::class, 'assertSame'));
-        $this->assertTrue(method_exists(UnitTest::class, 'createStub'));
-        $this->assertTrue(method_exists(UnitTest::class, 'expectException'));
+        $this->assertTrue(is_a(UnitTest::class, TestCase::class, true));
     }
 }
