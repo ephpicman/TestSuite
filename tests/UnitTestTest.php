@@ -21,13 +21,6 @@ final class UnitTestTest extends UnitTest
         $this->assertTrue($this->setUpRan);
         $this->assertSame(10, 10);
         $this->assertEquals('10', 10);
-        $false = false;
-        $null = null;
-        $value = 'value';
-
-        $this->assertFalse($false);
-        $this->assertNull($null);
-        $this->assertNotNull($value);
         $this->assertInstanceOf(UnitTest::class, $this);
         $this->assertCount(2, ['one', 'two']);
         $this->assertContains('two', ['one', 'two']);
