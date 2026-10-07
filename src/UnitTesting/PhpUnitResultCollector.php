@@ -17,6 +17,7 @@ use PHPUnit\Event\Tracer\Tracer;
 /**
  * @psalm-suppress InternalMethod
  */
+/** @psalm-suppress MissingOverrideAttribute */
 final class PhpUnitResultCollector implements Tracer
 {
     /** @var array<string, true> */
