@@ -47,7 +47,7 @@ final class PhpUnitRunner
         (new TestRunner())->run(
             $configuration,
             /** @psalm-suppress InternalClass */
-            new DefaultResultCache,
+            new DefaultResultCache(),
             $suite
         );
 
