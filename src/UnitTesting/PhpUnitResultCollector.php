@@ -16,6 +16,9 @@ use PHPUnit\Event\Tracer\Tracer;
 
 final class PhpUnitResultCollector implements Tracer
 {
+    /** @var array<string, true> */
+    private array $testClasses;
+
     /** @var array<string, float> */
     private array $startedAt = [];
 
@@ -28,10 +31,29 @@ final class PhpUnitResultCollector implements Tracer
     /** @var list<TestResult> */
     private array $results = [];
 
+    /** @param list<class-string<UnitTest>> $testClasses */
+    public function __construct(array $testClasses)
+    {
+        $this->testClasses = array_fill_keys($testClasses, true);
+    }
+
     public function trace(Event $event): void
     {
+        if (! $event->test()->isTestMethod()) {
+            return;
+        }
+
+        /** @var TestMethod $test */
+        $test = $event->test();
+
+        if (! isset($this->testClasses[$test->className()])) {
+            return;
+        }
+
+        $id = $test->id();
+
         if ($event instanceof PreparationStarted) {
-            $this->startedAt[$event->test()->id()] = $event->telemetryInfo()->durationSinceStart()->asFloat();
+            $this->startedAt[$id] = $event->telemetryInfo()->durationSinceStart()->asFloat();
 
             return;
         }
@@ -40,13 +62,13 @@ final class PhpUnitResultCollector implements Tracer
             if ($event->hasComparisonFailure()) {
                 $comparison = $event->comparisonFailure();
 
-                $this->failures[$event->test()->id()] = new Failure(
+                $this->failures[$id] = new Failure(
                     $event->throwable()->message(),
                     $comparison->expected(),
                     $comparison->actual()
                 );
             } else {
-                $this->failures[$event->test()->id()] = new Failure(
+                $this->failures[$id] = new Failure(
                     $event->throwable()->message()
                 );
             }
@@ -55,19 +77,19 @@ final class PhpUnitResultCollector implements Tracer
         }
 
         if ($event instanceof Errored) {
-            $this->errors[$event->test()->id()] = $event->throwable()->message();
+            $this->errors[$id] = $event->throwable()->message();
 
             return;
         }
 
         if ($event instanceof Skipped) {
-            $this->errors[$event->test()->id()] = 'Skipped: ' . $event->throwable()->message();
+            $this->errors[$id] = 'Skipped: ' . $event->throwable()->message();
 
             return;
         }
 
         if ($event instanceof MarkedIncomplete) {
-            $this->errors[$event->test()->id()] = 'Incomplete: ' . $event->throwable()->message();
+            $this->errors[$id] = 'Incomplete: ' . $event->throwable()->message();
 
             return;
         }
@@ -76,13 +98,6 @@ final class PhpUnitResultCollector implements Tracer
             return;
         }
 
-        $test = $event->test();
-
-        if (! $test instanceof TestMethod) {
-            return;
-        }
-
-        $id = $test->id();
         $startedAt = $this->startedAt[$id] ?? $event->telemetryInfo()->durationSinceStart()->asFloat();
         $finishedAt = $event->telemetryInfo()->durationSinceStart()->asFloat();
 
