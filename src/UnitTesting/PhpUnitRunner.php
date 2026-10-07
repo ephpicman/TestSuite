@@ -11,6 +11,9 @@ use PHPUnit\TextUI\Configuration\Builder as ConfigurationBuilder;
 use PHPUnit\TextUI\TestRunner;
 use ReflectionClass;
 
+/**
+ * @psalm-suppress InternalMethod
+ */
 final class PhpUnitRunner
 {
     /**
@@ -31,7 +34,6 @@ final class PhpUnitRunner
         $suite = TestSuite::empty('EphpicMan Test Suite');
 
         foreach ($testClasses as $testClass) {
-            /** @var ReflectionClass<UnitTest> $reflection */
             $reflection = new ReflectionClass($testClass);
 
             /** @psalm-suppress InternalClass */
