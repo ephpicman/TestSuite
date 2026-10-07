@@ -12,6 +12,8 @@ use Throwable;
  *
  * The Runner owns WordPress/EphpicMan test discovery. PHPUnit remains
  * responsible for test lifecycle, assertions and execution.
+ *
+ * @psalm-api
  */
 final class Runner
 {
