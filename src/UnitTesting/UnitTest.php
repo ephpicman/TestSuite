@@ -11,7 +11,10 @@ abstract class UnitTest implements Test
 {
     private int $assertions = 0;
 
-    /** @return list<TestResult> */
+    /**
+     * @return list<TestResult>
+     * @psalm-suppress UnusedVariable
+     */
     final public function runTests(): array
     {
         $results = [];
@@ -34,7 +37,6 @@ abstract class UnitTest implements Test
             $this->assertions = 0;
             $started = microtime(true);
             $failure = null;
-            /** @psalm-suppress UnusedVariable */
             $error = null;
 
             try {
