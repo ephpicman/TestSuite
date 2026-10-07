@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace EphpicMan\TestSuite\PHPUnit;
 
 use EphpicMan\TestSuite\UnitTesting\Runner;
-use EphpicMan\TestSuite\UnitTesting\UnitTest;
 use PHPUnit\Framework\TestCase;
 
 final class RunnerTest extends TestCase
