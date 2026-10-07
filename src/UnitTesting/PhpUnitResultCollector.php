@@ -40,19 +40,19 @@ final class PhpUnitResultCollector implements Tracer
     public function trace(Event $event): void
     {
         if (
-            !$event instanceof PreparationStarted
-            && !$event instanceof Failed
-            && !$event instanceof Errored
-            && !$event instanceof Skipped
-            && !$event instanceof MarkedIncomplete
-            && !$event instanceof Finished
+            ! $event instanceof PreparationStarted
+            && ! $event instanceof Failed
+            && ! $event instanceof Errored
+            && ! $event instanceof Skipped
+            && ! $event instanceof MarkedIncomplete
+            && ! $event instanceof Finished
         ) {
             return;
         }
 
         $test = $event->test();
 
-        if (!$test instanceof TestMethod || ! isset($this->testClasses[$test->className()])) {
+        if (! $test instanceof TestMethod || ! isset($this->testClasses[$test->className()])) {
             return;
         }
 
