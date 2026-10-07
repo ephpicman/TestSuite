@@ -17,14 +17,14 @@ abstract class UnitTest implements Test
         $results = [];
 
         foreach (get_class_methods($this) as $method) {
-            if (!str_starts_with($method, 'test')) {
+            if (! str_starts_with($method, 'test')) {
                 continue;
             }
 
             $reflection = new ReflectionMethod($this, $method);
 
             if (
-                !$reflection->isPublic()
+                ! $reflection->isPublic()
                 || $reflection->isStatic()
                 || $reflection->getNumberOfRequiredParameters() > 0
             ) {
@@ -104,11 +104,7 @@ abstract class UnitTest implements Test
         }
 
         $this->fail(
-            $message ?: sprintf(
-                'Failed asserting that %s equals %s.',
-                $this->export($actual),
-                $this->export($expected)
-            ),
+            $message ?: sprintf('Failed asserting that %s equals %s.', $this->export($actual), $this->export($expected)),
             $expected,
             $actual
         );
