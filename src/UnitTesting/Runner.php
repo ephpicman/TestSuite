@@ -97,10 +97,15 @@ final class Runner
      */
     private function findTestClasses(): array
     {
-        $directories = array_map(
-            static fn (string $directory): string => realpath($directory) ?: $directory,
-            $this->testsDirectories
-        );
+        $directories = [];
+
+        foreach ($this->testsDirectories as $directory) {
+            $realDirectory = realpath($directory);
+
+            $directories[] = $realDirectory === false
+                ? $directory
+                : $realDirectory;
+        }
 
         $testClasses = [];
 
@@ -121,7 +126,11 @@ final class Runner
                 continue;
             }
 
-            $file = realpath($file) ?: $file;
+            $realFile = realpath($file);
+
+            $file = $realFile === false
+                ? $file
+                : $realFile;
 
             foreach ($directories as $directory) {
                 $directory = rtrim($directory, DIRECTORY_SEPARATOR);
