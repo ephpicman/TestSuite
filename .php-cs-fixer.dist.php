@@ -24,5 +24,6 @@ return (new Config())
     ->setFinder(
         (new Finder())
             ->in(__DIR__ . '/src')
+            ->notPath('Commands/TestCommand.php')
             ->in(__DIR__ . '/phpunit')
     );
