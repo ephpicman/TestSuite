@@ -65,6 +65,9 @@ jobs:
       - name: Install dependencies
         run: composer install --no-interaction --no-progress --prefer-dist
 
+      - name: Lint PHP syntax
+        run: find src phpunit -type f -name '*.php' -print0 | xargs -0 -n1 php -l
+
       - name: Check formatting
         run: composer format:check
 

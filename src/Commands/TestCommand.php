@@ -28,6 +28,7 @@ final class TestCommand extends Command
 
         $results = new Runner($this->directories)->run();
         $passed = 0;
+        $assertions = 0;
 
         foreach ($results as $result) {
             $this->writeResult($output, $result);
@@ -35,6 +36,8 @@ final class TestCommand extends Command
             if ($result->passed()) {
                 $passed++;
             }
+
+            $assertions += $result->assertions();
         }
 
         $total = count($results);
@@ -47,12 +50,7 @@ final class TestCommand extends Command
                 $total,
                 $passed,
                 $failed,
-                array_sum(
-                    array_map(
-                        static fn (TestResult $result): int => $result->assertions(),
-                        $results
-                    )
-                )
+                $assertions
             )
         );
 
@@ -61,9 +59,13 @@ final class TestCommand extends Command
 
     private function writeResult(OutputInterface $output, TestResult $result): void
     {
-        $status = $result->passed()
-            ? 'PASS'
-            : ($result->failure() !== null ? 'FAIL' : 'ERROR');
+        if ($result->passed()) {
+            $status = 'PASS';
+        } elseif ($result->failure() !== null) {
+            $status = 'FAIL';
+        } else {
+            $status = 'ERROR';
+        }
 
         $output->writeln(
             sprintf(
