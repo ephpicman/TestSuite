@@ -59,9 +59,13 @@ final class TestCommand extends Command
 
     private function writeResult(OutputInterface $output, TestResult $result): void
     {
-        $status = $result->passed()
-            ? 'PASS'
-            : ($result->failure() !== null ? 'FAIL' : 'ERROR');
+        if ($result->passed()) {
+            $status = 'PASS';
+        } elseif ($result->failure() !== null) {
+            $status = 'FAIL';
+        } else {
+            $status = 'ERROR';
+        }
 
         $output->writeln(
             sprintf(
